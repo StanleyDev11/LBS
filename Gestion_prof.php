@@ -285,7 +285,7 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
         <div class="menu">
             <div class="menu-section">
                 <h3>Navigation</h3>
-                <a href="dashboard.php" class="menu-item">
+                <a href="index.html" class="menu-item">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -297,7 +297,11 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>Professeurs</span>
                 </a>
-                <a href="calendrier.php" class="menu-item">
+                <a href="Cla_Matiere.html" class="menu-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Filières & Matières</span>
+                </a>
+                  <a href="calendrier.php" class="menu-item">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Calendrier</span>
                 </a>
