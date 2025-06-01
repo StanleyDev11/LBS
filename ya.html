@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emargement - Centre de Formation Nazareth</title>
+    <style>
+        /* CSS pour la page d'émargement moderne */
+        /* Votre CSS ici */
+         /* CSS pour la page d'émargement moderne */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+        }
+
+        header p {
+            text-align: center;
+            color: #666;
+            margin: 10px 0 30px 0;
+            font-size: 16px;
+        }
+
+        form label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"]:focus,
+        input[type="time"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .time-input {
+            width: 48%;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button.btn {
+            width: 48%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.btn:hover {
+            background-color: #0056b3;
+        }
+
+        button.btn.secondary {
+            background-color: #790709;
+        }
+
+        button.btn.secondary:hover {
+            background-color: #790709;
+        }
+
+
+
+
+        p#status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+
+
+
+.btn {
+    display: inline-block; /* Pour permettre les marges et le padding */
+    background-color: #007bff; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    padding: 12px 20px; /* Espacement intérieur */
+    border-radius: 8px; /* Coins arrondis */
+    text-align: center; /* Centrer le texte */
+    text-decoration: none; /* Supprime le soulignement */
+    font-size: 16px; /* Taille de police */
+    transition: background-color 0.3s ease; /* Effet de transition */
+    cursor: pointer; /* Curseur de pointeur */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+
+
+
+
+
+  header img {
+        display: block; /* Affiche l'image comme un bloc */
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto 20px auto; /* Centre l'image et ajoute un espacement en bas */
+    }
+
+        .professor-name {
+            font-size: 16px;
+            color: #007bff; /* Couleur pour le nom du professeur */
+            margin-bottom: 20px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="oo.png" alt=""> <!-- Ajoutez votre logo ici -->
+            <h1>CENTRE DE FORMATION NAZARETH</h1>
+            <p>Veuillez émarger pour le début ou la fin du cours</p>
+        </header>
+
+        <form id="attendance-form">
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" placeholder="Entrez votre nom" required>
+
+            <div class="form-section">
+                <div class="time-input">
+                    <label for="start-time">Début du cours :</label>
+                    <input type="time" id="start-time" name="start-time">
+                </div>
+
+                <div class="time-input">
+                    <label for="end-time">Fin du cours :</label>
+                    <input type="time" id="end-time" name="end-time">
+                </div>
+            </div>
+
+            <label for="room">Salle de cours :</label>
+            <input type="text" id="room" name="room" placeholder="Entrez la salle" required>
+
+            <div class="buttons">
+                <button type="button" class="btn" onclick="checkLocation('debut')">Emarger pour Début</button>
+                <button type="button" class="btn secondary" onclick="checkLocation('fin')">Emarger pour Fin</button>
+            </div><br>
+         <center>
+    <a class='btn se' href='/' id='logout-button' onclick='logout()'>Déconnexion</a>
+</center>
+
+
+        </form>
+          
+        <p id="status"></p>
+    </div>
+
+    <script type="module">
+        // Importer les fonctions nécessaires depuis Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
+
+        // Configuration de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpg_wNtZineJiWU_9GpUyiixBLq0NcTh8",
+            authDomain: "nazareth-e2878.firebaseapp.com",
+            projectId: "nazareth-e2878",
+            storageBucket: "nazareth-e2878.appspot.com",
+            messagingSenderId: "431893499486",
+            appId: "1:431893499486:web:724a91123364d059b96ecf"
+        };
+
+        // Initialisation de Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+
+        // Coordonnées de l'emplacement de la salle (latitude et longitude)
+        const targetLatitude = 6.1479128;  // Vraie latitude
+        const targetLongitude = 1.2073500;  // Vraie longitude
+        const maxDistance = 100; // Distance maximale (en mètres) à laquelle l'émargement est autorisé
+        // Fonction pour calculer la distance entre deux points géographiques
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Rayon de la Terre en mètres
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return R * c; // Distance en mètres
+        }
+
+        // Fonction pour vérifier la position de l'utilisateur
+window.checkLocation = async function(type) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async position => {
+                const userLatitude = position.coords.latitude;
+                const userLongitude = position.coords.longitude;
+
+                const distance = calculateDistance(
+                    userLatitude,
+                    userLongitude,
+                    targetLatitude,
+                    targetLongitude
+                );
+
+                if (distance <= maxDistance) {
+                    document.getElementById('status').textContent = "Emargement réussi pour " + type;
+                    document.getElementById('status').className = 'success';
+
+                    // Récupérer les valeurs des champs du formulaire
+                    const name = document.getElementById('name').value;
+                    const startTime = document.getElementById('start-time').value;
+                    const endTime = document.getElementById('end-time').value;
+                    const room = document.getElementById('room').value;
+
+                    // Préparer les données à envoyer à Firestore
+                    const attendanceData = {
+                        name: name,
+                        type: type, // 'debut' ou 'fin'
+                        startTime: startTime || null,
+                        endTime: endTime || null,
+                        room: room,
+                        latitude: userLatitude,
+                        longitude: userLongitude,
+                        timestamp: new Date()
+                    };
+
+                    try {
+                        // Enregistrer les données dans Firestore
+                        await addDoc(collection(db, 'attendance'), attendanceData);
+                        console.log('Données enregistrées avec succès dans Firestore');
+                    } catch (error) {
+                        console.error('Erreur lors de l\'enregistrement des données :', error);
+                        document.getElementById('status').textContent = "Erreur lors de l'enregistrement des données.";
+                        document.getElementById('status').className = 'error';
+                    }
+                } else {
+                    document.getElementById('status').textContent = "Vous êtes trop loin pour émarger.";
+                    document.getElementById('status').className = 'error';
+                }
+            },
+            error => {
+                document.getElementById('status').textContent = "Impossible de récupérer votre position. Vérifiez vos paramètres.";
+                document.getElementById('status').className = 'error';
+            }
+        );
+    } else {
+        document.getElementById('status').textContent = "La géolocalisation n'est pas supportée par votre navigateur.";
+        document.getElementById('status').className = 'error';
+    }
+}
+
+
+
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+
+// Fonction pour déconnecter l'utilisateur
+async function logout() {
+    const auth = getAuth();
+    try {
+        await signOut(auth); // Déconnexion de l'utilisateur
+        alert("Vous êtes déconnecté."); // Message de succès (vous pouvez le personnaliser ou le supprimer)
+        // Rediriger l'utilisateur vers la page de connexion ou d'accueil
+        window.location.href = "index.html"; // Changez ce lien selon vos besoins
+    } catch (error) {
+        console.error("Erreur lors de la déconnexion :", error);
+        alert("Erreur lors de la déconnexion."); // Message d'erreur
+    }
+}
+
+
+// Événement pour le bouton de déconnexion
+document.getElementById('logout-button').addEventListener('click', logout);
+
+// Fonction pour gérer l'inactivité
+let inactivityTime = 0; // Compteur d'inactivité
+
+// Fonction pour réinitialiser le compteur d'inactivité
+function resetInactivityTime() {
+    inactivityTime = 0; // Réinitialise le compteur
+}
+
+// Vérifie l'inactivité toutes les minutes
+const inactivityInterval = setInterval(() => {
+    inactivityTime++;
+    if (inactivityTime >= 5) { // Si 5 minutes (5 * 60 secondes) sont écoulées
+        logout(); // Déconnecte l'utilisateur
+    }
+}, 60000); // Vérifie chaque minute
+
+// Écouteurs d'événements pour réinitialiser le compteur d'inactivité
+window.onload = resetInactivityTime; // Réinitialiser à l'ouverture de la page
+document.onmousemove = resetInactivityTime; // Réinitialiser avec le mouvement de la souris
+document.onkeypress = resetInactivityTime; // Réinitialiser avec une touche enfoncée
+
+
+    </script>
+
+</body>
+</html>

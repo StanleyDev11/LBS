@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Connexion</title>
+    <style>
+        /* Général */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Conteneur principal */
+        .container {
+            width: 400px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Formulaire */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+
+        .form-group label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            padding: 0 5px;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -20px;
+            font-size: 12px;
+            color: #007bff;
+        }
+
+        /* Bouton */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Message d'erreur */
+        #error-message {
+            color: red;
+            display: none;
+            margin-top: 15px;
+        }
+
+        /* Icône de visibilité du mot de passe */
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Se connecter</h2>
+        <div class="form-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">Email</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder=" " required>
+            <label for="password">Mot de passe</label>
+            <span class="show-password" id="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+        <button class="btn" onclick="login()">Se connecter</button>
+        <p id="error-message"></p>
+    </div>
+
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.getElementById("toggle-password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.innerText = "🙈";  // Change l'icône en mode "mot de passe visible"
+            } else {
+                passwordField.type = "password";
+                toggleIcon.innerText = "👁️";  // Change l'icône en mode "mot de passe masqué"
+            }
+        }
+
+        // Fonction de connexion
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (!email || !password) {
+                alert("Tous les champs sont requis.");
+                return;
+            }
+
+            const data = { email, password };
+
+            fetch("http://localhost/LBS/login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        // Si la connexion réussie, redirigez l'utilisateur ou enregistrez un token JWT
+                        alert(result.message);
+                        localStorage.setItem("user", JSON.stringify(result.data));
+                        window.location.href = "/LBS/Web/Administrateur.html"; // redirige vers la page d'accueil ou le tableau de bord
+                    } else {
+                        // Affiche un message d'erreur si la connexion échoue
+                        document.getElementById("error-message").innerText = result.message;
+                        document.getElementById("error-message").style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur:", error);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

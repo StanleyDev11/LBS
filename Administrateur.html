@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Administration</title>
+    <style>
+        /* Reset de style de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corps principal */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f7fc;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #007bff;
+            color: white;
+            padding-top: 30px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-bottom: 1px solid #fff;
+        }
+
+        .sidebar a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .title {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .header .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .user-info span {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 18px;
+            color: #777;
+        }
+
+        .user-list {
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-list h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="#">Tableau de bord</a>
+        <a href="Gestion_prof.php">Utilisateurs</a>
+        <a href="Cla_Matiere.html">Matière & Classe </a>
+        <a href="messagerie.php">Messagerie  </a>
+        <a href="#">Paramètres</a>
+        <a href="#">Statistiques</a>
+        <a href="#">Déconnexion</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Tableau de Bord</div>
+            <div class="user-info">
+                <span>Bonjour, Admin</span>
+                <span>|</span>
+                <span>Déconnexion</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>350</h3>
+                <p>Utilisateurs</p>
+            </div>
+            <div class="card">
+                <h3>120</h3>
+                <p>Transactions</p>
+            </div>
+            <div class="card">
+                <h3>25</h3>
+                <p>Commandes</p>
+            </div>
+        </div>
+
+        <!-- User List -->
+        <div class="user-list">
+            <h3>Liste des Utilisateurs</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>john@example.com</td>
+                        <td>Admin</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>jane@example.com</td>
+                        <td>Utilisateur</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Albert James</td>
+                        <td>albert@example.com</td>
+                        <td>Utilisateur</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

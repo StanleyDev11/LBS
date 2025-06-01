@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Université</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #f5f7fa;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .menu {
+            padding: 20px;
+        }
+
+        .menu-section {
+            margin-bottom: 30px;
+        }
+
+        .menu-section h3 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .menu-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu-item:hover {
+            color: #3498db;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #7f8c8d;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                overflow: hidden;
+            }
+            .sidebar .logo h1, .menu-section h3, .menu-item span {
+                display: none;
+            }
+            .menu-item {
+                justify-content: center;
+            }
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-item {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px 0;
+}
+
+.menu-item:hover {
+    color: #3498db;
+    background-color: rgba(255,255,255,0.1);
+}
+    </style>
+</head>
+<body>
+   <!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">
+        <h1>UniDashboard</h1>
+        <p>Gestion Universitaire</p>
+    </div>
+    <div class="menu">
+        <div class="menu-section">
+            <h3>Navigation</h3>
+            <a href="dashboard.php" class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="etudiants.php" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Étudiants</span>
+            </a>
+            <a href="Gestion_prof.php" class="menu-item">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Professeurs</span>
+            </a>
+            <a href="calendrier.php" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendrier</span>
+            </a>
+        </div>
+        <div class="menu-section">
+            <h3>Administration</h3>
+            <a href="cours.php" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Cours</span>
+            </a>
+            <a href="finances.php" class="menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Finances</span>
+            </a>
+            <a href="parametres.php" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Tableau de Bord</h2>
+            <div class="user-info">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin">
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>1,248</h3>
+                <p>Étudiants</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>84</h3>
+                <p>Professeurs</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-book"></i>
+                <h3>56</h3>
+                <p>Cours</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>92%</h3>
+                <p>Réussite</p>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="table-container">
+            <h3>Derniers étudiants inscrits</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Filière</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#ST2023001</td>
+                        <td>Jean Dupont</td>
+                        <td>Informatique</td>
+                        <td><span class="badge badge-success">Actif</span></td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                        <td>#ST2023002</td>
+                        <td>Marie Lambert</td>
+                        <td>Droit</td>
+                        <td><span class="badge badge-success">Actif</span></td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                        <td>#ST2023003</td>
+                        <td>Pierre Martin</td>
+                        <td>Médecine</td>
+                        <td><span class="badge badge-warning">En attente</span></td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                        <td>#ST2023004</td>
+                        <td>Sophie Bernard</td>
+                        <td>Économie</td>
+                        <td><span class="badge badge-success">Actif</span></td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Professors Table -->
+        <div class="table-container">
+            <h3>Professeurs récents</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Département</th>
+                        <th>Cours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#PR2023001</td>
+                        <td>Dr. Michel Durand</td>
+                        <td>Informatique</td>
+                        <td>Algorithmes</td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                        <td>#PR2023002</td>
+                        <td>Prof. Julie Moreau</td>
+                        <td>Droit</td>
+                        <td>Droit Civil</td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                        <td>#PR2023003</td>
+                        <td>Dr. Alain Petit</td>
+                        <td>Médecine</td>
+                        <td>Anatomie</td>
+                        <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Script pour rendre les menus interactifs
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                // Ici vous pourriez charger du contenu dynamique
+            });
+        });
+
+        // Exemple de fonction pour charger des données
+        function loadStudents() {
+            // Simuler un appel API
+            console.log("Chargement des étudiants...");
+        }
+
+        // Charger les données au démarrage
+        window.addEventListener('load', loadStudents);
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Centre de Formation Nazareth</title>
+    <style>
+        /* CSS pour la page de connexion moderne */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+        }
+
+        form label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Connexion</h1>
+        </header>
+        <form id="login-form">
+            <label for="email">Email :</label>
+            <input type="email" id="email" required placeholder="Entrez votre email">
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" required placeholder="Entrez votre mot de passe">
+
+            <button type="submit">Se connecter</button>
+        </form>
+        <p>Pas encore de compte ? <a href='/signup'>Inscrivez-vous ici</a></p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpg_wNtZineJiWU_9GpUyiixBLq0NcTh8",
+            authDomain: "nazareth-e2878.firebaseapp.com",
+            projectId: "nazareth-e2878",
+            storageBucket: "nazareth-e2878.appspot.com",
+            messagingSenderId: "431893499486",
+            appId: "1:431893499486:web:724a91123364d059b96ecf"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "emma.html"; // Redirection vers la page d'émargement
+            } catch (error) {
+                alert("Erreur de connexion : " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
