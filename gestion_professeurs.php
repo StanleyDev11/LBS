@@ -2,6 +2,7 @@
 // Connexion à la base de données
 require 'db.php';
 
+
 // Récupération des professeurs
 $sqlProfessors = "SELECT id, name, email FROM users WHERE role = 'prof'";
 $stmtProfessors = $pdo->prepare($sqlProfessors);

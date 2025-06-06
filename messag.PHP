@@ -1,0 +1,168 @@
+<?php
+// Connexion à la base de données
+require 'db.php';
+
+// Récupération des professeurs
+$sqlProfessors = "SELECT id, name, email FROM users WHERE role = 'prof'";
+$stmtProfessors = $pdo->prepare($sqlProfessors);
+$stmtProfessors->execute();
+$professors = $stmtProfessors->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .messaging-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message, .error-message {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="messaging-container">
+        <h3>Envoyer un message</h3>
+        <form id="messagingForm">
+            <div class="form-group">
+                <label for="recipient">Destinataire</label>
+                <select id="recipient" required>
+                    <option value="">-- Sélectionnez un destinataire --</option>
+                    <option value="all">Tous les utilisateurs</option>
+                    <?php foreach ($professors as $professor): ?>
+                        <option value="<?= htmlspecialchars($professor['id']) ?>">
+                            <?= htmlspecialchars($professor['name']) ?> (<?= htmlspecialchars($professor['email']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Entrez votre message ici..." required></textarea>
+            </div>
+
+            <button type="button" class="submit-btn" onclick="sendMessage()">Envoyer</button>
+        </form>
+
+        <div id="feedback" style="display: none;"></div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const recipient = document.getElementById("recipient").value;
+            const message = document.getElementById("message").value;
+
+            if (!recipient || !message) {
+                showFeedback("Veuillez remplir tous les champs.", "error");
+                return;
+            }
+
+            // Préparation des données à envoyer
+            const data = {
+                recipient: recipient,
+                message: message
+            };
+
+            // Envoi de la requête AJAX
+            fetch('messaging_handler.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showFeedback(result.message, "success");
+                    document.getElementById("messagingForm").reset();
+                } else {
+                    showFeedback("Erreur : " + result.message, "error");
+                }
+            })
+            .catch(error => {
+                showFeedback("Une erreur est survenue : " + error.message, "error");
+            });
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById("feedback");
+            feedback.style.display = "block";
+            feedback.className = type === "success" ? "success-message" : "error-message";
+            feedback.textContent = message;
+        }
+    </script>
+
+</body>
+
+</html>

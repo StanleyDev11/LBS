@@ -1,6 +1,7 @@
 <?php
 require 'db.php';
 
+
 $sqlProfessors = "SELECT id, name, email FROM users WHERE role = 'prof'";
 $stmtProfessors = $pdo->prepare($sqlProfessors);
 $stmtProfessors->execute();
@@ -327,8 +328,14 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
     <!-- Main Content -->
     <div class="main-content">
         <div class="header">
-            <h2>Gestion des Professeurs</h2>
-        </div>
+    <h2>Gestion des Professeurs</h2>
+    <div>
+        <button class="btn btn-success" onclick="openAddModal()"><i class="fas fa-plus"></i> Ajouter</button>
+        <button class="btn btn-success" onclick="openAddModal()"><i class="fas fa-plus"></i> Activer Le CRUD</button>
+
+        
+    </div>
+</div>
 
       <div class="table-container">
     <!-- Barre de recherche -->
@@ -345,6 +352,15 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
                 <button class="btn btn-primary" onclick="openModal(<?= $professor['id'] ?>, '<?= htmlspecialchars($professor['name']) ?>')">
                     <i class="fas fa-book"></i> Attribuer un Cours
                 </button>
+
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+        <button class="btn btn-warning" onclick="openEditModal(<?= $professor['id'] ?>, '<?= htmlspecialchars($professor['name']) ?>', '<?= htmlspecialchars($professor['email']) ?>')">
+            <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-danger" onclick="deleteProfessor(<?= $professor['id'] ?>)">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+        </div>
             </div>
         <?php endforeach; ?>
     </div>
@@ -398,90 +414,233 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+    <div class="modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Modifier le Professeur</h3>
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form id="editForm">
+            <input type="hidden" id="editId">
+            <div class="form-group">
+                <label for="editName">Nom</label>
+                <input type="text" id="editName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitEdit()">
+                    <i class="fas fa-check"></i> Enregistrer
+                </button>
+                <button type="button" class="btn btn-danger" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- MODAL AJOUT PROFESSEUR -->
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Ajouter un Professeur</h3>
+            <button class="close-btn" onclick="closeAddModal()">&times;</button>
+        </div>
+        <form id="addForm">
+            <div class="form-group">
+                <label for="addName">Nom</label>
+                <input type="text" id="addName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="addEmail">Email</label>
+                <input type="email" id="addEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="addPassword">Mot de passe</label>
+                <input type="password" id="addPassword" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitAdd()">
+                    <i class="fas fa-check"></i> Ajouter
+                </button>
+                <button type="button" class="btn btn-danger" onclick="closeAddModal()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
     <script>
-        let currentProfessorId = null;
-        const matieres = <?= json_encode($matieres) ?>;
+       let currentProfessorId = null;
+const matieres = <?= json_encode($matieres) ?>;
 
-        function openModal(professorId, professorName) {
-            currentProfessorId = professorId;
-            document.getElementById("professorName").value = professorName;
-            document.getElementById("assignModal").style.display = "flex";
+// === MODAL ATTRIBUTION ===
+function openModal(professorId, professorName) {
+    currentProfessorId = professorId;
+    document.getElementById("professorName").value = professorName;
+    document.getElementById("assignModal").style.display = "flex";
+}
+
+function closeModal() {
+    currentProfessorId = null;
+    document.getElementById("assignForm").reset();
+    document.getElementById("matiere").innerHTML = '<option value="">-- Sélectionnez une matière --</option>';
+    document.getElementById("assignModal").style.display = "none";
+}
+
+function filterMatieres() {
+    const filiereId = document.getElementById("filiere").value;
+    const matiereSelect = document.getElementById("matiere");
+    matiereSelect.innerHTML = '<option value="">-- Sélectionnez une matière --</option>';
+
+    matieres
+        .filter(matiere => matiere.filiere_id == filiereId)
+        .forEach(matiere => {
+            const option = document.createElement("option");
+            option.value = matiere.id;
+            option.textContent = matiere.name;
+            matiereSelect.appendChild(option);
+        });
+}
+
+function submitForm() {
+    const filiereId = document.getElementById("filiere").value;
+    const matiereId = document.getElementById("matiere").value;
+    const hours = document.getElementById("hours").value;
+
+    if (!filiereId || !matiereId || !hours) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+
+    fetch('attribution_handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            professorId: currentProfessorId,
+            filiereId,
+            matiereId,
+            hours
+        })
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert(result.message);
+            closeModal();
+        } else {
+            alert("Erreur : " + result.message);
         }
+    })
+    .catch(error => alert("Erreur serveur : " + error.message));
+}
 
-        function closeModal() {
-            currentProfessorId = null;
-            document.getElementById("assignForm").reset();
-            document.getElementById("matiere").innerHTML = '<option value="">-- Sélectionnez une matière --</option>';
-            document.getElementById("assignModal").style.display = "none";
-        }
-
-        function filterMatieres() {
-            const filiereId = document.getElementById("filiere").value;
-            const matiereSelect = document.getElementById("matiere");
-
-            matiereSelect.innerHTML = '<option value="">-- Sélectionnez une matière --</option>';
-
-            matieres
-                .filter(matiere => matiere.filiere_id == filiereId)
-                .forEach(matiere => {
-                    const option = document.createElement("option");
-                    option.value = matiere.id;
-                    option.textContent = matiere.name;
-                    matiereSelect.appendChild(option);
-                });
-        }
-
-        function submitForm() {
-            const filiereId = document.getElementById("filiere").value;
-            const matiereId = document.getElementById("matiere").value;
-            const hours = document.getElementById("hours").value;
-
-            if (!filiereId || !matiereId || !hours) {
-                alert("Veuillez remplir tous les champs.");
-                return;
-            }
-
-            const data = {
-                professorId: currentProfessorId,
-                filiereId: filiereId,
-                matiereId: matiereId,
-                hours: hours
-            };
-
-            fetch('attribution_handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert(result.message);
-                    closeModal();
-                } else {
-                    alert("Erreur : " + result.message);
-                }
-            })
-            .catch(error => {
-                alert("Une erreur est survenue : " + error.message);
-            });
-        }
-
+// === RECHERCHE ===
 function filterProfessors() {
     const searchValue = document.getElementById("searchInput").value.toLowerCase();
     const cards = document.querySelectorAll(".prof-card");
 
     cards.forEach(card => {
         const name = card.dataset.name;
-        if (name.includes(searchValue)) {
-            card.style.display = "flex";
-        } else {
-            card.style.display = "none";
+        card.style.display = name.includes(searchValue) ? "flex" : "none";
+    });
+}
+
+// === AJOUT PROFESSEUR ===
+function openAddModal() {
+    document.getElementById("addModal").style.display = "flex";
+}
+
+function closeAddModal() {
+    document.getElementById("addForm").reset();
+    document.getElementById("addModal").style.display = "none";
+}
+
+function submitAdd() {
+    const name = document.getElementById('addName').value;
+    const email = document.getElementById('addEmail').value;
+    const password = document.getElementById('addPassword').value;
+
+    fetch('professor_handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'add',
+            name: name,
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        Swal.fire({
+            icon: data.success ? 'success' : 'error',
+            title: data.success ? 'Succès' : 'Erreur',
+            text: data.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        if (data.success) {
+            setTimeout(() => location.reload(), 2000);
         }
     });
 }
+
+
+// === MODIFICATION PROFESSEUR ===
+function openEditModal(id, name, email) {
+    document.getElementById("editId").value = id;
+    document.getElementById("editName").value = name;
+    document.getElementById("editEmail").value = email;
+    document.getElementById("editModal").style.display = "flex";
+}
+
+function closeEditModal() {
+    document.getElementById("editForm").reset();
+    document.getElementById("editModal").style.display = "none";
+}
+
+function submitEdit() {
+    const id = document.getElementById('editId').value;
+    const name = document.getElementById('editName').value;
+    const email = document.getElementById('editEmail').value;
+
+    fetch('professor_handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'update',
+            id: id,
+            name: name,
+            email: email
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        Swal.fire({
+            icon: data.success ? 'success' : 'error',
+            title: data.success ? 'Modifié' : 'Erreur',
+            text: data.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        if (data.success) {
+            setTimeout(() => location.reload(), 2000);
+        }
+    });
+}
+
 
 
     </script>
