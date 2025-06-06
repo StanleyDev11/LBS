@@ -247,6 +247,14 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
         .btn-success:hover {
             background-color: #27ae60;
         }
+        .btn-crud {
+            background-color: #7C0606FF;
+            color: white;
+        }
+
+        .btn-crud:hover {
+            background-color: #7C0606FF;
+        }
 
         .btn-danger {
             background-color: #e74c3c;
@@ -331,7 +339,9 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
     <h2>Gestion des Professeurs</h2>
     <div>
         <button class="btn btn-success" onclick="openAddModal()"><i class="fas fa-plus"></i> Ajouter</button>
-        <button class="btn btn-success" onclick="openAddModal()"><i class="fas fa-plus"></i> Activer Le CRUD</button>
+      <button class="btn btn-crud" onclick="openCrudModal()"><i class="fas fa-lock-open"></i> Activer le CRUD
+</button>
+
 
         
     </div>
@@ -353,14 +363,15 @@ $matieres = $stmtMatieres->fetchAll(PDO::FETCH_ASSOC);
                     <i class="fas fa-book"></i> Attribuer un Cours
                 </button>
 
-                <div style="margin-top: 10px; display: flex; gap: 10px;">
-        <button class="btn btn-warning" onclick="openEditModal(<?= $professor['id'] ?>, '<?= htmlspecialchars($professor['name']) ?>', '<?= htmlspecialchars($professor['email']) ?>')">
-            <i class="fas fa-edit"></i>
-        </button>
-        <button class="btn btn-danger" onclick="deleteProfessor(<?= $professor['id'] ?>)">
-            <i class="fas fa-trash-alt"></i>
-        </button>
-        </div>
+                <div class="crud-buttons" style="margin-top: 10px; display: none; gap: 10px;">
+    <button class="btn btn-warning" onclick="openEditModal(<?= $professor['id'] ?>, '<?= htmlspecialchars($professor['name']) ?>', '<?= htmlspecialchars($professor['email']) ?>')">
+        <i class="fas fa-edit"></i>
+    </button>
+    <button class="btn btn-danger" onclick="deleteProfessor(<?= $professor['id'] ?>)">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</div>
+
             </div>
         <?php endforeach; ?>
     </div>
@@ -638,6 +649,54 @@ function submitEdit() {
         if (data.success) {
             setTimeout(() => location.reload(), 2000);
         }
+    });
+}
+
+
+let crudActivated = false;
+
+function openCrudModal() {
+    Swal.fire({
+        title: 'Mot de passe requis',
+        input: 'password',
+        inputLabel: 'Veuillez entrer le mot de passe pour activer les actions CRUD',
+        inputPlaceholder: 'Mot de passe',
+        inputAttributes: {
+            maxlength: 20,
+            autocapitalize: 'off',
+            autocorrect: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Valider',
+        cancelButtonText: 'Annuler'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const password = result.value;
+            if (password === 'admin123') { // <-- change ici le mot de passe
+                crudActivated = true;
+                showCrudButtons();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'CRUD activé',
+                    text: 'Les boutons sont maintenant visibles.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Mot de passe incorrect',
+                    text: 'Vous ne pouvez pas accéder aux actions sensibles.'
+                });
+            }
+        }
+    });
+}
+
+function showCrudButtons() {
+    const buttons = document.querySelectorAll('.crud-buttons');
+    buttons.forEach(btn => {
+        btn.style.display = 'flex';
     });
 }
 

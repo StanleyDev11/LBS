@@ -162,24 +162,13 @@
     <button class="btn" onclick="openAddFiliereModal()">
         <i class="fas fa-plus-circle"></i> Ajouter une Filière
     </button>
+
+     <button class="btn btn-admin" onclick="checkFilierePassword()">
+        <i class="fas fa-lock"></i> Mode CRUD Admin
+    </button>
 </div>
 
-<!-- Modal pour ajouter une filière -->
-<div id="addFiliereModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeAddFiliereModal()">&times;</span>
-        <h2><i class="fas fa-graduation-cap"></i> Ajouter une Filière</h2>
-        <form id="addFiliereForm">
-            <div class="form-group">
-                <label for="filiereName">Nom de la Filière</label>
-                <input type="text" id="filiereName" placeholder="Ex: Informatique" required>
-            </div>
-            <button type="button" class="btn" onclick="addFiliere()">
-                <i class="fas fa-check-circle"></i> Ajouter
-            </button>
-        </form>
-    </div>
-</div>
+
 <br><br><br>
 
 <!-- Section des cartes de filières -->
@@ -192,64 +181,272 @@
 
 <!-- Modal pour attribuer une matière -->
 <div id="assignModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content modal-animated">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2><i class="fas fa-book"></i> Attribuer une Matière</h2>
         <form id="assignMatiereForm">
             <div class="form-group">
                 <label for="matiereName">Nom de la Matière</label>
-                <input type="text" id="matiereName" placeholder="Ex: Mathématiques" required>
+                <input type="text" id="matiereName" class="input-control" placeholder="Ex: Mathématiques" required>
             </div>
-            <button type="button" class="btn" onclick="saveMatiere()">
-                <i class="fas fa-save"></i> Enregistrer
-            </button>
+            <div class="btn-container">
+                <button type="button" class="btn btn-primary" onclick="saveMatiere()">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal pour ajouter une filière -->
+<div id="addFiliereModal" class="modal">
+    <div class="modal-content modal-animated">
+        <span class="close" onclick="closeAddFiliereModal()">&times;</span>
+        <h2><i class="fas fa-graduation-cap"></i> Ajouter une Filière</h2>
+        <form id="addFiliereForm">
+            <div class="form-group">
+                <label for="filiereName">Nom de la Filière</label>
+                <input type="text" id="filiereName" class="input-control" placeholder="Ex: Informatique" required>
+            </div>
+            <div class="btn-container">
+                <button type="button" class="btn btn-primary" onclick="addFiliere()">
+                    <i class="fas fa-check-circle"></i> Ajouter
+                </button>
+            </div>
         </form>
     </div>
 </div>
 
 
+
+<!-- Modal pour modifier une filière -->
+<div id="editFiliereModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditFiliereModal()">&times;</span>
+        <h2 class="modal-title">
+            <i class="fas fa-pen-square"></i> Modifier la Filière
+        </h2>
+
+        <form id="editFiliereForm" class="form">
+            <!-- Champ caché pour l'ID -->
+            <input type="hidden" id="editFiliereId">
+
+            <div class="form-group">
+                <label for="editFiliereName" class="form-label">Nom de la Filière</label>
+                <input
+                    type="text"
+                    id="editFiliereName"
+                    class="form-control"
+                    placeholder="Ex : Master 1 MG"
+                    required
+                >
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="updateFiliere()">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditFiliereModal()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
 <!-- Styles (exemples rapides) -->
 <style>
+    
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 80px;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: #fff;
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-title {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #e74c3c;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-control {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.input-control:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+
+    
     .card-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     .card {
-        background-color: #f9f9f9;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 200px;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4);
-    }
-
-    .modal-content {
         background-color: #fff;
-        margin: 10% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 400px;
-        position: relative;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s;
     }
 
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        cursor: pointer;
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        margin-bottom: 1rem;
+        color: #2c3e50;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .card .btn {
+        margin-top: 0.5rem;
+        width: 100%;
     }
 
     .btn {
@@ -257,16 +454,42 @@
         background-color: #3498db;
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 6px;
         cursor: pointer;
+        font-size: 0.95rem;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #2980b9;
     }
 
     .form-group {
         margin-bottom: 1rem;
     }
+
+    .modal-content h2 {
+        margin-bottom: 1rem;
+        color: #2c3e50;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .btn-admin {
+    background-color: #2ecc71;
+}
+
+</style>
+
+
+   
 </style>
 
 <!-- Script mis à jour -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     let currentFiliereId = null;
 
@@ -295,18 +518,33 @@
             filiereCards.innerHTML = '';
             filieres.forEach(filiere => {
                 const card = `
-                    <div class="card">
-                        <h3><i class="fas fa-graduation-cap"></i> ${filiere.name}</h3>
-                        <button class="btn" onclick="openModal(${filiere.id})">
-                            <i class="fas fa-book-open"></i> Attribuer Matière
-                        </button>
-                    </div>
-                `;
+    <div class="card">
+        <h3><i class="fas fa-graduation-cap"></i> ${filiere.name}</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <button class="btn" onclick="openModal(${filiere.id})">
+                <i class="fas fa-book-open"></i> Attribuer Matière
+            </button>
+            <button class="btn" onclick="showMatieres(${filiere.id})">
+                <i class="fas fa-eye"></i> Voir les Matières
+            </button>
+            <div class="admin-actions" style="display: none; flex-direction: column; gap: 0.5rem;">
+                <button class="btn btn-edit" onclick="openEditFiliereModal(${filiere.id}, '${filiere.name}')">
+                    <i class="fas fa-edit"></i> Modifier
+                </button>
+                <button class="btn btn-delete" onclick="deleteFiliere(${filiere.id})">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+`;
+
                 filiereCards.innerHTML += card;
             });
         })
         .catch(error => console.error('Erreur:', error));
 }
+
 
 
     function addFiliere() {
@@ -326,17 +564,19 @@
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                alert('Filière ajoutée avec succès !');
-                document.getElementById('addFiliereForm').reset();
-                closeAddFiliereModal();
-                fetchFilieres();
-            } else {
-                alert('Erreur : ' + result.message);
-            }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Une erreur est survenue.');
+    Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Filière ajoutée avec succès !',
+        timer: 2000,
+        showConfirmButton: false
+    });
+    document.getElementById('addFiliereForm').reset();
+    closeAddFiliereModal();
+    fetchFilieres();
+} else {
+    Swal.fire('Erreur', result.message, 'error');
+}
         });
     }
 
@@ -357,19 +597,183 @@
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                alert('Matière attribuée avec succès !');
-                closeModal();
-            } else {
-                alert('Erreur : ' + result.message);
-            }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Une erreur est survenue.');
+    Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Matière attribuée avec succès !',
+        timer: 2000,
+        showConfirmButton: false
+    });
+    closeModal();
+} else {
+    Swal.fire('Erreur', result.message, 'error');
+}
+
         });
+        
     }
 
     window.onload = fetchFilieres;
+
+
+
+
+
+
+   function showMatieres(filiereId) {
+    fetch('http://localhost/LBS/WEB/get_matieres.php?filiereId=' + filiereId)
+        .then(res => res.json())
+        .then(result => {
+            if (!result.success) {
+                Swal.fire('Erreur', result.message, 'error');
+                return;
+            }
+
+            const matieres = result.matieres;
+            if (matieres.length === 0) {
+                Swal.fire('Aucune matière', 'Cette filière n’a pas encore de matières.', 'info');
+                return;
+            }
+
+            const matiereTable = `
+                <table style="width:100%; border-collapse: collapse; text-align:left;">
+                    <thead>
+                        <tr style="background-color:#f2f2f2;">
+                            <th style="padding: 8px; border: 1px solid #ddd;">#</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Nom de la Matière</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${matieres.map((m, index) => `
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${index + 1}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${m.name}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            Swal.fire({
+                title: 'Matières de la Filière',
+                html: matiereTable,
+                width: '600px',
+                confirmButtonText: 'Fermer'
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire('Erreur', 'Impossible de charger les matières.', 'error');
+        });
+}
+
+
+
+function openEditFiliereModal(id, name) {
+    document.getElementById('editFiliereId').value = id;
+    document.getElementById('editFiliereName').value = name;
+    document.getElementById('editFiliereModal').style.display = 'block';
+}
+
+function closeEditFiliereModal() {
+    document.getElementById('editFiliereModal').style.display = 'none';
+}
+
+function updateFiliere() {
+    const id = document.getElementById('editFiliereId').value;
+    const name = document.getElementById('editFiliereName').value;
+
+    fetch('http://localhost/LBS/WEB/filiere_handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', id, name }),
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            Swal.fire('Succès', 'Filière mise à jour avec succès.', 'success');
+            closeEditFiliereModal();
+            fetchFilieres();
+        } else {
+            Swal.fire('Erreur', result.message, 'error');
+        }
+    });
+}
+
+
+function deleteFiliere(id) {
+    Swal.fire({
+        title: 'Êtes-vous sûr ?',
+        text: "Cette action est irréversible !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Oui, supprimer !',
+        cancelButtonText: 'Annuler'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('http://localhost/LBS/WEB/filiere_handler.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', id }),
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire('Supprimé !', 'La filière a été supprimée.', 'success');
+                    fetchFilieres();
+                } else {
+                    Swal.fire('Erreur', result.message, 'error');
+                }
+            });
+        }
+    });
+}
+
+
+function addFiliere() {
+    const name = document.getElementById('filiereName').value;
+
+    fetch('http://localhost/LBS/WEB/filiere_handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add', name }),
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            Swal.fire('Ajoutée', 'La filière a été ajoutée.', 'success');
+            closeAddFiliereModal();
+            fetchFilieres();
+        } else {
+            Swal.fire('Erreur', result.message, 'error');
+        }
+    });
+}
+
+function checkFilierePassword() {
+    Swal.fire({
+        title: 'Authentification Admin',
+        input: 'password',
+        inputLabel: 'Entrez le mot de passe admin',
+        inputPlaceholder: 'Mot de passe',
+        showCancelButton: true,
+        confirmButtonText: 'Valider',
+        cancelButtonText: 'Annuler'
+    }).then(result => {
+        if (result.isConfirmed) {
+            const password = result.value;
+            if (password === 'admin123') { // 🔒 à changer selon ton besoin
+                const actions = document.querySelectorAll('.admin-actions');
+                actions.forEach(div => div.style.display = 'flex');
+                Swal.fire('Mode CRUD activé', 'Les options admin sont visibles.', 'success');
+            } else {
+                Swal.fire('Accès refusé', 'Mot de passe incorrect.', 'error');
+            }
+        }
+    });
+}
+
+
 </script>
 
     </div>
