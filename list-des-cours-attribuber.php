@@ -246,51 +246,64 @@ table tbody tr:hover {
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo">
-            <h1>UniDashboard</h1>
-            <p>Gestion Universitaire</p>
+    <div class="logo">
+        <h1>UniDashboard</h1>
+        <p>Gestion Universitaire</p>
+    </div>
+    <div class="menu">
+        <div class="menu-section">
+            <h3>Navigation</h3>
+            <a href="index.html" class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="etudiants.php" class="menu-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Étudiants</span>
+            </a>
+            <a href="Gestion_prof.php" class="menu-item">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Professeurs</span>
+            </a>
+            <a href="Cla_Matiere.html" class="menu-item">
+                <i class="fas fa-layer-group"></i>
+                <span>Filières</span>
+            </a>
+            <a href="calendrier.php" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendrier</span>
+            </a>
         </div>
-        <div class="menu">
-            <div class="menu-section">
-                <h3>Navigation</h3>
-                <a href="index.html" class="menu-item">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="etudiants.php" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Étudiants</span>
-                </a>
-                <a href="Gestion_prof.php" class="menu-item">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>Professeurs</span>
-                </a>
-                <a href="Cla_Matiere.html" class="menu-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Filières&Matières</span>
-                </a>
-                <a href="calendrier.php" class="menu-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Calendrier</span>
-                </a>
-            </div>
-            <div class="menu-section">
-                <h3>Administration</h3>
-                <a href="cours.php" class="menu-item">
-                    <i class="fas fa-book"></i>
-                    <span>Cours</span>
-                </a>
-                <a href="finances.php" class="menu-item">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Finances</span>
-                </a>
-                <a href="parametres.php" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Paramètres</span>
-                </a>
-            </div>
+        <div class="menu-section">
+            <h3>Administration</h3>
+            <a href="list-des-cours-attribuber.php" class="menu-item">
+                <i class="fas fa-book-open"></i>
+                <span>Cours</span>
+            </a>
+            <a href="finances.php" class="menu-item">
+                <i class="fas fa-wallet"></i>
+                <span>Finances</span>
+            </a>
+            <a href="messagerie.php" class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Messagerie</span>
+            </a>
+            <a href="liste_emargements.php" class="menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Emargement</span>
+            </a>
+            <a href="Matiere.php" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matière</span>
+            </a>
+            <a href="parametres.php" class="menu-item">
+                <i class="fas fa-cogs"></i>
+                <span>Paramètres</span>
+            </a>
         </div>
     </div>
+</div>
+
 
     <!-- Contenu principal vide -->
     <div class="main-content">
