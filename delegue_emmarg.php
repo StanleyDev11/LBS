@@ -33,16 +33,17 @@ $whereClause = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
 $sql = "
 SELECT 
-    u.name AS utilisateur_nom,
+    u.nom AS utilisateur_nom,
     f.id AS filiere_id,
     f.name AS filiere_nom,
     m.id AS matiere_id,
     m.name AS matiere_nom,
     e.type_emargement,
     e.heure_cours,
-    e.date_emargement
-FROM emargement e
-JOIN users u ON e.utilisateur_id = u.id
+    e.date_emargement,
+    e.syllabus
+FROM emmarge_delegue e
+JOIN utilisateurs u ON e.utilisateur_id = u.id
 JOIN filieres f ON e.filiere_id = f.id
 JOIN matieres m ON e.matiere_id = m.id
 $whereClause
@@ -56,7 +57,7 @@ $emargements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Pour les filtres dropdowns
 $filieres = $pdo->query("SELECT id, name FROM filieres")->fetchAll(PDO::FETCH_ASSOC);
 $matieres = $pdo->query("SELECT id, name FROM matieres")->fetchAll(PDO::FETCH_ASSOC);
-$types = ['Début', 'Fin'];
+$types = ['debut' => 'Début', 'fin' => 'Fin'];
 ?>
 
 
@@ -164,75 +165,26 @@ $types = ['Début', 'Fin'];
             }
         }
 
-        .messaging-container {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    max-width: 600px;
-    margin: auto;
+
+
+
+          /* Action buttons avec des balises <a> */
+.action-buttons a {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px 15px;
+  text-decoration: none;
+  background-color: #3498db;
+  color: white;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+  font-weight: bold;
 }
 
-.messaging-container h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.action-buttons a:hover {
+  background-color: #2980b9;
 }
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #34495e;
-    font-weight: bold;
-}
-
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.submit-btn {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s;
-}
-
-.submit-btn:hover {
-    background-color: #2980b9;
-}
-
-.feedback {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 6px;
-    display: none;
-}
-
-.success-message {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
+        
 
 
 
@@ -291,23 +243,7 @@ $types = ['Début', 'Fin'];
         }
 
 
-  /* Action buttons avec des balises <a> */
-.action-buttons a {
-  display: inline-block;
-  margin: 5px;
-  padding: 10px 15px;
-  text-decoration: none;
-  background-color: #3498db;
-  color: white;
-  border-radius: 10px;
-  transition: background-color 0.3s;
-  font-weight: bold;
-}
-
-.action-buttons a:hover {
-  background-color: #2980b9;
-}
-
+ 
 
     </style>
 </head>
@@ -375,22 +311,17 @@ $types = ['Début', 'Fin'];
 
     <!-- Contenu principal vide -->
     <div class="main-content">
-    <div class="top-icons">
-        <i class="fas fa-file-export" title="Exporter"></i>
-        <i class="fas fa-sync-alt" title="Actualiser" onclick="location.reload()"></i>
-        <i class="fas fa-filter" title="Filtrer"></i>
-    </div>
+        <!-- Tu peux ajouter ici ton contenu personnalisé -->
 
-  <h2>Liste des Émargements (Professeurs)</h2>
-  
-        <div class="action-buttons">
-    <a href="delegue_emmarg.php" class="btn-admin">
-        <i class="fas fa-user-shield"></i> Etudiants
+  <h2>Liste des Émargements (Délégué)</h2>
+
+<div class="action-buttons">
+    <a href="liste_emargements.php" class="btn-admin">
+        <i class="fas fa-user-shield"></i> Professeurs
     </a>
 </div>
-<br>
 
-<br>
+<br><br>
 
 <form method="get" class="filters">
     <input type="text" id="searchInput" placeholder="Rechercher par nom d'utilisateur..." class="search-bar">
@@ -433,6 +364,7 @@ $types = ['Début', 'Fin'];
             <th><i class="fas fa-clock icon"></i> Type</th>
             <th><i class="fas fa-hourglass-half icon"></i> Heure</th>
             <th><i class="fas fa-calendar-day icon"></i> Date</th>
+            <th><i class="fas fa-file-alt icon"></i> Syllabus</th>
         </tr>
     </thead>
     <tbody>
@@ -444,6 +376,7 @@ $types = ['Début', 'Fin'];
                 <td><?= htmlspecialchars($row['type_emargement']) ?></td>
                 <td><?= htmlspecialchars($row['heure_cours']) ?>h</td>
                 <td><?= htmlspecialchars($row['date_emargement']) ?></td>
+                <td><?= htmlspecialchars($row['syllabus']) ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -462,4 +395,7 @@ $types = ['Début', 'Fin'];
     });
 </script>
 
+
+    </div>
+</body>
 </html>
